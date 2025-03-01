@@ -1,11 +1,57 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { getWeather } from "../lib/wttrin";
+import CurrentWeather from "../components/currentWeather.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+let city = "Wannweil, Germany";
+
+// if requested with a post request
+if (Astro.request.method === "POST") {
+  let body = await Astro.request.formData();
+  city = String(body.get("city")) || city;
+}
+
+const { current_condition, nearest_area, request, weather } = await getWeather(city);
 ---
 
 <Layout>
-	<Welcome />
+  <div class="flex flex-col items-center pt-35 pb-3 w-screen fixed dark:text-white">
+    <h1 class="text-5xl font-extrabold">Weather</h1>
+    <p>
+      Weather is a simple weather app that shows the current weather in your
+      location.
+    </p>
+    <p>
+      It uses the <a href="https://wttr.in" class="underline">wttr.in API</a> to get the weather data.
+    </p>
+    <p>
+      <button class="mt-3" onclick="document.querySelector('form').classList.toggle('hidden')">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+          ></path>
+        </svg>
+      </button>
+    </p>
+    <form hx-post="/" hx-target="body" hx-swap="innerHTML" class="hidden">
+      <input type="text" name="city" placeholder="City" />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="flex flex-col items-center justify-center h-screen dark:bg-black dark:text-white">
+    <CurrentWeather
+      currentWeather={current_condition[0]}
+      nearestArea={nearest_area[0]}
+    />
+  </div>
 </Layout>

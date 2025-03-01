@@ -1,0 +1,103 @@
+---
+import "../styles/global.css";
+import { type CurrentCondition, type Area } from "../lib/wttrin";
+
+interface Props {
+  currentWeather: CurrentCondition;
+  nearestArea: Area;
+}
+
+const { currentWeather, nearestArea } = Astro.props;
+
+let weatherCondition = "";
+let weatherIcon = "";
+
+switch (Number(currentWeather.weatherCode)) {
+  case 113:
+    weatherCondition = "Clear";
+    weatherIcon = "☀️";
+    break;
+  case 116:
+    weatherCondition = "Partly Cloudy";
+    weatherIcon = "🌤️";
+    break;
+  case 119:
+    weatherCondition = "Cloudy";
+    weatherIcon = "☁️";
+    break;
+  case 122:
+    weatherCondition = "Overcast";
+    weatherIcon = "☁️";
+    break;
+  case 143:
+    weatherCondition = "Mist";
+    weatherIcon = "🌫️";
+    break;
+  case 176:
+    weatherCondition = "Patchy rain possible";
+    weatherIcon = "🌧️";
+    break;
+  case 179:
+    weatherCondition = "Patchy snow possible";
+    weatherIcon = "🌨️";
+    break;
+  case 182:
+    weatherCondition = "Patchy sleet possible";
+    weatherIcon = "🌨️";
+    break;
+  case 185:
+    weatherCondition = "Patchy freezing drizzle possible";
+    weatherIcon = "🌨️";
+    break;
+  case 200:
+    weatherCondition = "Thundery outbreaks possible";
+    weatherIcon = "⛈️";
+    break;
+  case 227:
+    weatherCondition = "Blowing snow";
+    weatherIcon = "🌨️🍃";
+    break;
+  case 230:
+    weatherCondition = "Blizzard";
+    weatherIcon = "🌨️⛈️";
+    break;
+  case 248:
+    weatherCondition = "Fog";
+    weatherIcon = "🌫️";
+    break;
+  case 260:
+    weatherCondition = "Freezing fog";
+    weatherIcon = "🌫️❄️";
+    break;
+  case 263:
+    weatherCondition = "Patchy light drizzle";
+    weatherIcon = "🌧️";
+    break;
+  case 266:
+    weatherCondition = "Light drizzle";
+    weatherIcon = "🌧️";
+    break;
+
+  default:
+    break;
+}
+---
+
+<div>
+  <h2 class="text-3xl">
+    {nearestArea.areaName[0].value}, {nearestArea.country[0].value}
+  </h2>
+  <div class="flex flex-col items-center">
+    <h2 class="text-9xl">{weatherIcon}</h2>
+    <p class="mt-2">{weatherCondition} {currentWeather.temp_C}°C</p>
+  </div>
+  <div class="flex flex-row justify-center mt-4 space-x-4">
+    <p>
+      💧 {currentWeather.humidity}%
+    </p>
+    <p>
+      🌪️ {currentWeather.windspeedKmph} km/h
+    </p>
+    <p>⛱️ {currentWeather.uvIndex}</p>
+  </div>
+</div>
