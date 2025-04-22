@@ -1,7 +1,8 @@
 
-1.0.0 / 2025-04-22
+n.n.n / 2025-04-22
 ==================
 
+  * Added changelog
   * Changed to self-hosted umami instance
   * Edited README & license
   * Added ignores
